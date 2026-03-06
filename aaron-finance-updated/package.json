@@ -1,0 +1,20 @@
+{
+  "name": "aaron-finance-app",
+  "version": "1.0.0",
+  "description": "Aaron Austen Personal Finance Dashboard 🎀",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "setup-db": "psql $DATABASE_URL -f db/schema.sql"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": { "node": ">=18.0.0" }
+}

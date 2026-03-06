@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎀 Aaron Finance — Duit Aman, Hati Senang!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Floating Decorations -->
+  <div class="deco deco-1">🌸</div>
+  <div class="deco deco-2">⭐</div>
+  <div class="deco deco-3">🍬</div>
+  <div class="deco deco-4">🌙</div>
+  <div class="deco deco-5">💫</div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">🐱</span>
+        <div>
+          <div class="logo-title">Aaron Finance</div>
+          <div class="logo-sub">by Aaron Austen ✨</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">🏠</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="transactions" onclick="navigate('transactions')">
+        <span class="nav-icon">📋</span>
+        <span>Transaksi</span>
+      </button>
+      <button class="nav-item" data-page="analytics" onclick="navigate('analytics')">
+        <span class="nav-icon">📊</span>
+        <span>Analitik</span>
+      </button>
+      <button class="nav-item" data-page="investments" onclick="navigate('investments')">
+        <span class="nav-icon">💰</span>
+        <span>Investasi</span>
+      </button>
+      <button class="nav-item" data-page="budgets" onclick="navigate('budgets')">
+        <span class="nav-icon">🎯</span>
+        <span>Budget</span>
+      </button>
+      <button class="nav-item" data-page="accounts" onclick="navigate('accounts')">
+        <span class="nav-icon">🏦</span>
+        <span>Rekening</span>
+      </button>
+      <button class="nav-item" data-page="notes" onclick="navigate('notes')">
+        <span class="nav-icon">📝</span>
+        <span>Catatan</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">🐱</div>
+        <div>
+          <div class="user-name">Aaron Austen</div>
+          <div class="user-tagline">Keep saving! 💪</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <header class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()" id="hamburger">☰</button>
+      <div class="topbar-title" id="page-title">🏠 Dashboard</div>
+      <div class="topbar-right">
+        <div class="date-badge" id="current-date"></div>
+        <button class="btn-add-txn" onclick="openModal('modal-txn')">+ Transaksi</button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <!-- Dynamic content loaded here -->
+    </div>
+  </main>
+
+  <!-- MODAL: Add Transaction -->
+  <div class="modal-overlay" id="modal-txn" onclick="closeModalOutside(event, 'modal-txn')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>✨ Tambah Transaksi</h2>
+        <button class="modal-close" onclick="closeModal('modal-txn')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-tabs">
+          <button class="form-tab active" onclick="setTxnType('pengeluaran', this)">😭 Pengeluaran</button>
+          <button class="form-tab" onclick="setTxnType('pemasukan', this)">😍 Pemasukan</button>
+        </div>
+        <form id="form-txn" onsubmit="submitTransaction(event)">
+          <input type="hidden" id="txn-id" value="">
+          <input type="hidden" id="txn-type" value="pengeluaran">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>💰 Jumlah (Rp)</label>
+              <input type="number" id="txn-amount" placeholder="50000" required min="0">
+            </div>
+            <div class="form-group">
+              <label>📅 Tanggal</label>
+              <input type="date" id="txn-date" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>📝 Deskripsi</label>
+            <input type="text" id="txn-desc" placeholder="Beli bakso sama Veve~" required>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>🏷️ Kategori</label>
+              <select id="txn-category" required></select>
+            </div>
+            <div class="form-group" id="tipe-group">
+              <label>🌟 Tipe</label>
+              <select id="txn-tipe">
+                <option value="kebutuhan">✅ Kebutuhan</option>
+                <option value="keinginan">🛍️ Keinginan</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>🏦 Sumber Dana</label>
+            <select id="txn-account" required></select>
+          </div>
+          <div class="form-group">
+            <label><input type="checkbox" id="txn-flagged"> ⚠️ Tandai untuk review (kuning)</label>
+          </div>
+          <div class="form-group">
+            <label>📌 Catatan tambahan</label>
+            <textarea id="txn-notes" placeholder="Opsional..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-txn')">Batal</button>
+            <button type="submit" class="btn-primary">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Investment -->
+  <div class="modal-overlay" id="modal-inv" onclick="closeModalOutside(event, 'modal-inv')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>💰 Tambah Investasi</h2>
+        <button class="modal-close" onclick="closeModal('modal-inv')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-inv" onsubmit="submitInvestment(event)">
+          <div class="form-group">
+            <label>📛 Nama Investasi</label>
+            <input type="text" id="inv-name" placeholder="Emas Antam 0.5 gram" required>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>📂 Jenis</label>
+              <select id="inv-type" onchange="updateInvForm()">
+                <option value="emas">🥇 Emas</option>
+                <option value="reksadana">📊 Reksa Dana</option>
+                <option value="saham">📈 Saham</option>
+                <option value="kripto">🪙 Kripto</option>
+                <option value="lain">💼 Lain-lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>📅 Tanggal Beli</label>
+              <input type="date" id="inv-date" required>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>💵 Modal Awal (Rp)</label>
+              <input type="number" id="inv-amount" placeholder="700000" required>
+            </div>
+            <div class="form-group" id="inv-qty-group">
+              <label>⚖️ Jumlah / Qty</label>
+              <input type="number" id="inv-qty" placeholder="0.5" step="0.000001">
+            </div>
+          </div>
+          <div class="form-group" id="inv-unit-group">
+            <label>📏 Satuan</label>
+            <input type="text" id="inv-unit" placeholder="gram / unit / lot">
+          </div>
+          <div class="form-group">
+            <label>📝 Catatan</label>
+            <textarea id="inv-notes" placeholder="Opsional..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-inv')">Batal</button>
+            <button type="submit" class="btn-primary">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Budget -->
+  <div class="modal-overlay" id="modal-budget" onclick="closeModalOutside(event, 'modal-budget')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>🎯 Set Budget</h2>
+        <button class="modal-close" onclick="closeModal('modal-budget')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-budget" onsubmit="submitBudget(event)">
+          <div class="form-group">
+            <label>🏷️ Kategori</label>
+            <select id="budget-category" required></select>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>💰 Budget (Rp)</label>
+              <input type="number" id="budget-amount" placeholder="200000" required>
+            </div>
+            <div class="form-group">
+              <label>📅 Bulan</label>
+              <select id="budget-month">
+                <option value="1">Januari</option><option value="2">Februari</option>
+                <option value="3">Maret</option><option value="4">April</option>
+                <option value="5">Mei</option><option value="6">Juni</option>
+                <option value="7">Juli</option><option value="8">Agustus</option>
+                <option value="9">September</option><option value="10">Oktober</option>
+                <option value="11">November</option><option value="12">Desember</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>📆 Tahun</label>
+            <input type="number" id="budget-year" value="2026">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-budget')">Batal</button>
+            <button type="submit" class="btn-primary">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Note -->
+  <div class="modal-overlay" id="modal-note" onclick="closeModalOutside(event, 'modal-note')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>📝 Tambah Catatan</h2>
+        <button class="modal-close" onclick="closeModal('modal-note')">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-note" onsubmit="submitNote(event)">
+          <div class="form-group">
+            <label>📌 Judul</label>
+            <input type="text" id="note-title" placeholder="Target nabung bulan ini~" required>
+          </div>
+          <div class="form-group">
+            <label>📄 Isi Catatan</label>
+            <textarea id="note-content" rows="4" placeholder="Tulis apapun..."></textarea>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>✨ Emoji</label>
+              <input type="text" id="note-emoji" value="📝" maxlength="2">
+            </div>
+            <div class="form-group">
+              <label>🎨 Warna</label>
+              <select id="note-color">
+                <option value="#ffd1dc">🌸 Pink</option>
+                <option value="#a8d8ea">💙 Biru</option>
+                <option value="#b5ead7">💚 Hijau</option>
+                <option value="#ffeaa7">💛 Kuning</option>
+                <option value="#e2d9f3">💜 Ungu</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-note')">Batal</button>
+            <button type="submit" class="btn-primary">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container"></div>
+
+  <script src="src/app.js"></script>
+  <script src="src/pages.js"></script>
+  <script src="src/charts.js"></script>
+</body>
+</html>
